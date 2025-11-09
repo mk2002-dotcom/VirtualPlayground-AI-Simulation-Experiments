@@ -1,4 +1,3 @@
-# compression with tensor network
 import numpy as np
 import matplotlib.pyplot as plt
 from PIL import Image
@@ -35,5 +34,4 @@ plt.imshow(reconstructed, cmap='gray')
 plt.axis('off')
 
 plt.tight_layout()
-
 plt.show()

@@ -7,7 +7,7 @@ from matplotlib.animation import FuncAnimation
 # パラメータ
 # ------------------------
 N = 100
-dt = 0.05
+dt = 0.01
 t_max = 30
 T_init = 0.05
 T_max = 0.5
