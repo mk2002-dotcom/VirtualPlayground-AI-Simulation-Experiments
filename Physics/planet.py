@@ -3,6 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
 from scipy.integrate import solve_ivp
+from matplotlib.animation import PillowWriter
 
 # ===== parameters =====
 G = 1.0
@@ -42,8 +43,8 @@ def deriv(t, y):
     return dydt
 
 # ===== solve =====
-t_span = (0, 100)
-t_eval = np.linspace(*t_span, 5000)
+t_span = (0, 10)
+t_eval = np.linspace(*t_span, 1000)
 sol = solve_ivp(deriv, t_span, y0, t_eval=t_eval, method='RK45', rtol=1e-8, atol=1e-8)
 
 positions_sun = sol.y[0:2].T
@@ -73,4 +74,6 @@ def update(frame):
     return sun_dot, earth_dot, moon_dot, earth_trace, moon_trace
 
 ani = FuncAnimation(fig, update, frames=len(t_eval), interval=20, blit=True)
-plt.show()
+#plt.show()
+ani.save("sun_earth_moon.gif", writer=PillowWriter(fps=30))
+print("✅ GIF saved as sun_earth_moon.gif")
