@@ -1,29 +1,33 @@
 # VirtualPlayground
-A collection of **interesting and educational code examples** in Artificial Intelligence and Simulation.  
-This repository is designed as a **playground** for learning, experimenting, and exploring new ideas.
+A curated collection of educational and experimental code examples in Artificial Intelligence and Simulation.
+This repository serves as a playground for learning, prototyping, and exploring creative ideas in computational intelligence.
 
 ---
 
 ## Features
-- Simple and well-structured Python scripts
-- Covers both **AI algorithms** and **simulation demos**
-- Easy to run and extend for your own projects
+Clean, minimal, and well-structured Python scripts
+Covers both AI algorithms and simulation techniques
+Easy to run, extend, and integrate into your own projects
 
 ---
 
 ## Repository Structure
 - `Introduction/` : Introductory Python examples
-- `MonteCarlo/` : Monte Carlo method
-- `Optimization/` : Function fitting etc.
+- `MonteCarlo/` : Monte Carlo methods and random sampling
+- `Optimization/` : Function fitting, Traveling Salesman Problem etc.
+- `Bio\` : Ants, Birds, Virus etc.
+- `Physics\` : Planets, Pendulums, Tunnleling effect etc.
+- `Society\` : Inventory management, Trade simulation, Maze etc.
+- `ImageCompression_Classification\` : Using neural network and tensor network
 
 ---
 
 ## Getting Started
 Clone this repository and try the examples:
 
-```bash
-git clone https://github.com/your-username/your-repo.git
-cd your-repo
+```
+git clone https://github.com/your-username/VirtualPlayground.git
+cd VirtualPlayground
 python Introduction/plot.py
 ```
 
@@ -31,8 +35,9 @@ python Introduction/plot.py
 
 ## Purpose
 
-This project is not a polished library, but rather a collection of experiments.
-It aims to make learning AI and simulations more approachable and fun.
+This project is not a production-ready library —
+it’s a sandbox for experiments and creative exploration in AI and simulation.
+The goal is to make learning complex ideas approachable, visual, and fun.
 
 ---
 
