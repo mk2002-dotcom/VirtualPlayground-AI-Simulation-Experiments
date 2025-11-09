@@ -1,7 +1,9 @@
 # VirtualPlayground
 A curated collection of educational and experimental code examples in Artificial Intelligence and Simulation.
 This repository serves as a playground for learning, prototyping, and exploring creative ideas in computational intelligence.
+## 🌞 Sun–Earth–Moon Simulation
 
+![Sun–Earth–Moon Animation](assets/sun_earth_moon.gif)
 ---
 
 ## Features
@@ -15,10 +17,10 @@ Easy to run, extend, and integrate into your own projects
 - `Introduction/` : Introductory Python examples
 - `MonteCarlo/` : Monte Carlo methods and random sampling
 - `Optimization/` : Function fitting, Traveling Salesman Problem etc.
-- `Bio\` : Ants, Birds, Virus etc.
-- `Physics\` : Planets, Pendulums, Tunnleling effect etc.
-- `Society\` : Inventory management, Trade simulation, Maze etc.
-- `ImageCompression_Classification\` : Using neural network and tensor network
+- `Bio/` : Ants, Birds, Virus etc.
+- `Physics/` : Planets, Pendulums, Tunnleling effect etc.
+- `Society/` : Inventory management, Trade simulation, Maze etc.
+- `ImageCompression_Classification/` : Using neural network and tensor network
 
 ---
 
