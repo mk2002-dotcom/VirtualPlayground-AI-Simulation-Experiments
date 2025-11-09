@@ -1,17 +1,15 @@
+# Image classification
 from PIL import Image
 import torch
 from torchvision import models, transforms
 
-# モデル
+# model
 model = models.resnet18(weights=models.ResNet18_Weights.DEFAULT)
 model.eval()
 
-# 画像読み込み
-# img_path = r"C:\Users\narik\code\apple.jpg"
 img_path = r".\apple.jpg"
 img = Image.open(img_path).convert("RGB")
 
-# 前処理
 preprocess = transforms.Compose([
     transforms.Resize(256),
     transforms.CenterCrop(224),
@@ -22,11 +20,9 @@ preprocess = transforms.Compose([
 
 img_t = preprocess(img).unsqueeze(0)
 
-# 推論
 with torch.no_grad():
     out = model(img_t)
 _, index = torch.max(out, 1)
 
-# クラス名取得
 labels = models.ResNet18_Weights.DEFAULT.meta["categories"]
-print("予測クラス:", labels[index[0]])
+print("Class:", labels[index[0]])

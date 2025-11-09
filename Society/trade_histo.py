@@ -1,9 +1,9 @@
-# trade (histogram)
-# trade histogram
+# Trade (histogram)
 import random
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib import animation
+
 
 class Agent:
     def __init__(self, money):
@@ -37,7 +37,7 @@ N_agent = 100
 init_money = 1000
 limit = 10
 N_trade = 10
-N_bins = 20  # ヒストグラムのビン数
+N_bins = 20
 
 # Set up
 world = World(N_agent, init_money)
@@ -47,7 +47,7 @@ hist_values, bins, patches = ax.hist([a.money for a in world.agents], bins=N_bin
 def update(frame):
     for _ in range(N_trade):
         world.step()
-    ax.cla()  # 前のヒストグラムを消す
+    ax.cla()
     ax.set_xlim(0, init_money * 10)
     ax.set_ylim(0, N_agent)
     ax.set_title("Wealth Distribution")

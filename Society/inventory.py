@@ -1,17 +1,16 @@
-# inventory management
+# Inventory management
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
 
 # ----------------------
-# 1. パラメータ設定
+# 1. Parameters
 # ----------------------
 np.random.seed()
 
 days = 30
 num_products = 3
 
-# パラメータをリストで設定（商品ごとに個別設定可能）
 params = {
     "initial_inventory": [50, 40, 60],
     "daily_demand_mean": [5, 7, 4],
@@ -19,16 +18,16 @@ params = {
     "reorder_point": [20, 25, 30],
     "reorder_qty": [40, 50, 30],
     "max_inventory": [100, 100, 100],
-    "lead_time": [2, 3, 1]  # 発注から届く日数
+    "lead_time": [2, 3, 1]
 }
 
 # ----------------------
-# 2. 在庫シミュレーション
+# 2. Simulation
 # ----------------------
 inventory = [params["initial_inventory"].copy()]
 pending_orders = [[] for _ in range(num_products)]
 
-# 需要生成
+# Demand
 demand_list = np.zeros((days, num_products), dtype=int)
 for p in range(num_products):
     daily = np.random.normal(params["daily_demand_mean"][p],
@@ -39,20 +38,16 @@ for p in range(num_products):
 for day in range(days):
     current_stock = inventory[-1].copy()
 
-    # 消費処理
     for p in range(num_products):
         demand = demand_list[day, p]
         current_stock[p] = max(current_stock[p] - demand, 0)
 
-    # 発注処理
     for p in range(num_products):
-        # リードタイム中の到着チェック
         for order in pending_orders[p]:
             if order[0] == day:
                 current_stock[p] += order[1]
         pending_orders[p] = [o for o in pending_orders[p] if o[0] > day]
 
-        # 発注判定
         if current_stock[p] <= params["reorder_point"][p]:
             qty = min(params["reorder_qty"][p],
                       params["max_inventory"][p] - current_stock[p])
@@ -64,7 +59,7 @@ for day in range(days):
 inventory = np.array(inventory)
 
 # ----------------------
-# 3. アニメーション描画
+# 3. Animation
 # ----------------------
 fig, ax = plt.subplots(figsize=(8,5))
 ax.set_xlim(0, days)

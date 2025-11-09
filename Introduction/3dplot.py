@@ -1,4 +1,4 @@
-# 3d plot or contour
+# 3d plot
 import numpy as np
 import matplotlib.pyplot as plt
 

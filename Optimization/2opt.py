@@ -1,18 +1,18 @@
-# 2-opt
+# Traveling salesman problem: 2-opt
 # better than nearest neighbor
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
 
 # ===============================
-# 1. データ生成
+# 1. Data
 # ===============================
 np.random.seed()
 num_cities = 15
 cities = np.random.rand(num_cities, 2)
 
 # ===============================
-# 2. 距離計算
+# 2. Distance
 # ===============================
 def total_distance(order):
     dist = 0
@@ -21,7 +21,7 @@ def total_distance(order):
     return dist
 
 # ===============================
-# 3. 初期解（Nearest Neighbor）
+# 3. Nearest Neighbor
 # ===============================
 def nearest_neighbor(cities):
     n = len(cities)
@@ -39,7 +39,7 @@ def nearest_neighbor(cities):
 order = nearest_neighbor(cities)
 
 # ===============================
-# 4. 2-opt改善ステップを記録
+# 4. 2-opt steps
 # ===============================
 def two_opt_steps(order):
     n = len(order)
@@ -74,7 +74,7 @@ for step in steps:
         all_frames.append(step[:i+1])
         
 # ===============================
-# 5. アニメーション
+# 5. Animation
 # ===============================
 fig, ax = plt.subplots(figsize=(6,6))
 ax.set_title("2-opt", fontsize=14)

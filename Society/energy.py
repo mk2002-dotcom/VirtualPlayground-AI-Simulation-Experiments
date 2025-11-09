@@ -1,11 +1,11 @@
-# energy transport (linear )
+# Energy transport (linear)
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
 import pulp
 
 # ----------------------
-# パラメータ設定
+# Parameters
 # ----------------------
 np.random.seed()
 
@@ -26,7 +26,7 @@ pos = {
     'CityA': (10,1), 'CityB': (10,4), 'CityC': (10,7), 'CityD': (10,10)
 }
 
-# 発電量・需要のランダム変動
+# Daily change
 P_max_daily = []
 D_daily = []
 for day in range(days):
@@ -39,7 +39,7 @@ for day in range(days):
     })
 
 # ----------------------
-# 最適輸送計算
+# Optimization
 # ----------------------
 all_flows = []
 all_costs = []
@@ -66,14 +66,13 @@ for day in range(days):
     all_costs.append(pulp.value(prob.objective))
 
 # ----------------------
-# アニメ描画
+# Animation
 # ----------------------
 fig, ax = plt.subplots(figsize=(8,6))
 ax.set_xlim(-1,11)
 ax.set_ylim(-1,11)
 ax.set_title("Energy Transport with Load Highlight")
 
-# ノード描画
 for n,(x_pos,y_pos) in pos.items():
     color = 'red' if n in cities else 'blue'
     ax.scatter(x_pos,y_pos,color=color,s=100)
@@ -95,19 +94,17 @@ def update(day):
             x1,y1 = pos[j]
             lines[idx].set_data([x0,x1],[y0,y1])
             
-            # 線の太さ
             lw = flow[(i,j)] / 10
             lines[idx].set_linewidth(max(lw,0.5))
             
-            # 色判定（負荷率 = 輸送量 / 都市需要）
             demand = D_daily[day][j]
             load_ratio = flow[(i,j)] / demand if demand>0 else 0
             if flow[(i,j)] < demand*0.9:
-                color = 'red'  # 不足
+                color = 'red'  
             elif load_ratio > 1.2:
-                color = 'orange'  # 過負荷
+                color = 'orange'  
             else:
-                color = 'green'  # 安全
+                color = 'green'  
             lines[idx].set_color(color)
             idx +=1
 

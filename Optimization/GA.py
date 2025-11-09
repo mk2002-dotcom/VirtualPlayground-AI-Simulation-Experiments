@@ -1,4 +1,4 @@
-# Genetic Algorithm
+# Traveling salesman problem: Genetic Algorithm
 # better than nearest neighbor and 2-opt
 import numpy as np
 import matplotlib.pyplot as plt
@@ -6,7 +6,7 @@ from matplotlib.animation import FuncAnimation
 import random
 
 # ===============================
-# 1. 都市データ生成
+# 1. Data
 # ===============================
 np.random.seed()
 num_cities = 15
@@ -19,7 +19,7 @@ def total_distance(order):
     return dist
 
 # ===============================
-# 2. GAパラメータ
+# 2. GA parameters
 # ===============================
 POP_SIZE = 80
 ELITE_SIZE = 10
@@ -27,19 +27,19 @@ MUTATION_RATE = 0.2
 GENERATIONS = 100
 
 # ===============================
-# 3. 初期集団生成
+# 3. Initialize
 # ===============================
 def create_route():
     route = list(range(num_cities))
     random.shuffle(route)
-    route.append(route[0])  # 戻る
+    route.append(route[0]) 
     return route
 
 def initial_population():
     return [create_route() for _ in range(POP_SIZE)]
 
 # ===============================
-# 4. 適応度（短いほど高評価）
+# 4. Routes
 # ===============================
 def rank_routes(pop):
     distances = [total_distance(r) for r in pop]
@@ -47,7 +47,7 @@ def rank_routes(pop):
     return ranked
 
 # ===============================
-# 5. 選択
+# 5. Selection
 # ===============================
 def selection(ranked):
     selected = [route for _, route in ranked[:ELITE_SIZE]]
@@ -58,7 +58,7 @@ def selection(ranked):
     return selected
 
 # ===============================
-# 6. 交叉（部分写像交叉）
+# 6. Crossover
 # ===============================
 def crossover(parent1, parent2):
     start, end = sorted(random.sample(range(1, num_cities - 1), 2))
@@ -75,7 +75,7 @@ def crossover(parent1, parent2):
     return child
 
 # ===============================
-# 7. 突然変異
+# 7. Mutation
 # ===============================
 def mutate(route):
     for i in range(1, num_cities - 1):
@@ -85,7 +85,7 @@ def mutate(route):
     return route
 
 # ===============================
-# 8. 世代更新
+# 8. Update
 # ===============================
 def next_generation(current_gen):
     ranked = rank_routes(current_gen)
@@ -101,9 +101,6 @@ def next_generation(current_gen):
     new_gen = selected[:ELITE_SIZE] + children
     return new_gen
 
-# ===============================
-# 9. 進化過程を記録
-# ===============================
 population = initial_population()
 history = []
 for gen in range(GENERATIONS):
@@ -112,7 +109,7 @@ for gen in range(GENERATIONS):
     history.append(best_route)
 
 # ===============================
-# 10. アニメーション描画
+# 10. Animation
 # ===============================
 fig, ax = plt.subplots(figsize=(6,6))
 ax.set_title("Genetic Algorithm - TSP Evolution", fontsize=14)

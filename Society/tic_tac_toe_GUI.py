@@ -1,4 +1,4 @@
-# tic tac toe (GUI ver)
+# Tic tac toe (GUI ver)
 # Let's play tic tac toe with AI
 import tkinter as tk
 import numpy as np
@@ -6,7 +6,7 @@ import random
 import pickle
 
 
-# ====== 簡易 Qエージェント（学習済み想定 or ランダム） ======
+# ====== Q agent ======
 class QAgent:
     def __init__(self, Q=None):
         self.Q = Q if Q else {}
@@ -15,19 +15,18 @@ class QAgent:
         return tuple(state)
 
     def choose_action(self, state, available_actions, epsilon=0.0):
-        # 学習済みQがあれば最良手、なければランダム
         qs = [self.Q.get((self.get_state_key(state), a), 0) for a in available_actions]
         max_q = max(qs)
         best_actions = [a for a, q in zip(available_actions, qs) if q == max_q]
         return random.choice(best_actions)
 
-# ====== 環境 ======
+# ====== Environment ======
 class TicTacToe:
     def __init__(self):
         self.reset()
 
     def reset(self):
-        self.board = np.zeros(9, dtype=int)  # 0:空, 1:人間, -1:AI
+        self.board = np.zeros(9, dtype=int)  # 0:Empty, 1:Human, -1:AI
         self.done = False
         self.winner = None
         return self.board.copy()
@@ -80,7 +79,7 @@ class TicTacToeGUI:
         if self.env.done:
             return
 
-        # 人間の手
+        # Human
         if self.env.board[idx] == 0:
             self.env.step(idx, 1)
             self.update_board()
@@ -88,7 +87,7 @@ class TicTacToeGUI:
                 self.show_result()
                 return
 
-            # AIの手
+            # AI
             self.root.after(500, self.ai_move)
 
     def ai_move(self):
@@ -121,11 +120,9 @@ class TicTacToeGUI:
         for b in self.buttons:
             b.config(state="disabled")
 
-# ====== 実行 ======
 if __name__ == "__main__":
     root = tk.Tk()
 
-    # ここで学習済みQを読み込み可能 (例: pickle.load(open("qtable.pkl","rb")))
     agent = QAgent()
     agent.Q = pickle.load(open("qtable_strong.pkl", "rb"))
     agent.epsilon = 0

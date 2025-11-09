@@ -1,31 +1,31 @@
-# smoke
+# Smoke
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
 
 # parameters
-N = 96             # グリッドサイズ（偶数推奨）
-dt = 0.08          # 時間刻み
-visc = 1e-7        # 粘性（小さいほど渦が残る）
-diff = 5e-5        # 密度・温度の微小拡散
-buoyancy_beta = 0.1  # 温度からの浮力強さ（上昇）
-buoyancy_alpha = 0.001 # 煙の重さ（負の浮力）
-vort_eps = 0.4         # vorticity confinement 強さ
+N = 96             
+dt = 0.08          
+visc = 1e-7      
+diff = 5e-5        
+buoyancy_beta = 0.1  
+buoyancy_alpha = 0.001 
+vort_eps = 0.4         # vorticity confinement
 source_density = 120.0
 source_temp = 6.0
 
 # initialize
-u = np.zeros((N, N))     # x速度（右が正）
-v = np.zeros((N, N))     # y速度（上が正）
-dens = np.zeros((N, N))  # 煙密度（可視化主成分）
-temp = np.zeros((N, N))  # 温度（熱源）
-p = np.zeros((N, N))     # 圧力（projectに使用）
+u = np.zeros((N, N))     
+v = np.zeros((N, N))     
+dens = np.zeros((N, N)) 
+temp = np.zeros((N, N))
+p = np.zeros((N, N))
 
 # grid coordinates (i = x index, j = y index)
 j_idx, i_idx = np.meshgrid(np.arange(N), np.arange(N), indexing='ij')  # note: (y,x) indexing
 
 # -------------------------
-# ユーティリティ関数
+# Utility
 # -------------------------
 def set_bnd_scalar(x):
     # 固定（反射的）境界を簡易実装
@@ -52,9 +52,7 @@ def diffuse(field, field0, diff_coef, iter=20):
     return f
 
 # -------------------------
-# バイリニア補間（ベクトル化）
-# xp, yp は (N,N) の float 配列（x座標, y座標）
-# field[y, x] の順でインデックス
+# Bilinear
 # -------------------------
 def bilinear_sample(field, xp, yp):
     xp_clipped = np.clip(xp, 0.0, N - 1.000001)
@@ -74,16 +72,12 @@ def bilinear_sample(field, xp, yp):
     return (1-sx)*(1-sy)*f00 + sx*(1-sy)*f10 + (1-sx)*sy*f01 + sx*sy*f11
 
 # -------------------------
-# RK4 半ラグランジュ（逆トレース）アドベクション
-# field <- advect_RK4(field, u, v)
-# xp, yp coords correspond to x (col index), y (row index)
+# RK4
 # -------------------------
 def advect_RK4(field, u_field, v_field):
-    # 現在の格子座標（float）
     xp = i_idx.astype(float)   # shape (N,N), x coordinate (col)
     yp = j_idx.astype(float)   # y coordinate (row)
 
-    # サンプル用の速度アクセス関数（返り値 u_interp, v_interp）
     def sample_uv(xp_s, yp_s):
         # note: bilinear_sample expects field[y,x]
         u_i = bilinear_sample(u_field, xp_s, yp_s)
@@ -105,17 +99,15 @@ def advect_RK4(field, u_field, v_field):
     y4 = yp - dt * k3v * N
     k4u, k4v = sample_uv(x4, y4)
 
-    # 合成してソース座標を得る（逆時間積分）
     x_src = xp - (dt * N / 6.0) * (k1u + 2*k2u + 2*k3u + k4u)
     y_src = yp - (dt * N / 6.0) * (k1v + 2*k2v + 2*k3v + k4v)
 
-    # サンプルして新しい field を得る
     field_new = bilinear_sample(field, x_src, y_src)
     set_bnd_scalar(field_new)
     return field_new
 
 # -------------------------
-# project: 非圧縮化（簡易Poisson解法）
+# Project
 # -------------------------
 def project(u_field, v_field, iter=30):
     div = np.zeros_like(u_field)
@@ -135,7 +127,7 @@ def project(u_field, v_field, iter=30):
     set_bnd_scalar(u_field); set_bnd_scalar(v_field)
 
 # -------------------------
-# vorticity confinement（渦度補正）
+# vorticity confinement
 # -------------------------
 def vorticity_confinement(u_field, v_field, eps=vort_eps):
     # ω = dv/dx - du/dy
@@ -154,38 +146,38 @@ def vorticity_confinement(u_field, v_field, eps=vort_eps):
     set_bnd_scalar(u_field); set_bnd_scalar(v_field)
 
 # -------------------------
-# 1ステップまとめ
+# one step
 # -------------------------
 def step():
     global u, v, dens, temp
-    # 1) 増源（下中央から煙と熱）
+    # 1)
     sx = N // 2
     sy = 4
     dens[sy:sy+4, sx-2:sx+2] += source_density * dt * 0.03
     temp[sy:sy+4, sx-2:sx+2] += source_temp * dt * 0.6
 
-    # 2) 温度による浮力（上向き）
+    # 2)
     v += dt * (buoyancy_beta * (temp - 0.0) - buoyancy_alpha * dens)
 
-    # 3) 渦度補正で渦を保つ
+    # 3)
     vorticity_confinement(u, v, eps=vort_eps)
 
-    # 4) 拡散（速度、密度、温度）
+    # 4) Diffusion
     u = diffuse(u, u.copy(), visc)
     v = diffuse(v, v.copy(), visc)
     dens = diffuse(dens, dens.copy(), diff)
     temp = diffuse(temp, temp.copy(), diff)
 
-    # 5) 速度を非圧縮化
+    # 5)
     project(u, v, iter=30)
 
-    # 6) アドベクション（RK4 半ラグランジュ）
+    # 6)
     u = advect_RK4(u, u, v)
     v = advect_RK4(v, u, v)
     dens = advect_RK4(dens, u, v)
     temp = advect_RK4(temp, u, v)
 
-    # 7) 再度非圧縮化（小さい浮動誤差除去）
+    # 7)
     project(u, v, iter=20)
 
     # 8) clamp / remove NaN
@@ -193,17 +185,15 @@ def step():
         f[np.isnan(f)] = 0.0
         np.clip(f, -1e3, 1e3, out=f)
 
-# animation
+# Animation
 fig, ax = plt.subplots(figsize=(6,6))
 img = ax.imshow(dens, cmap="gray", origin="lower", vmin=0, vmax=5)
 ax.set_title("Thermal Smoke (RK4 advection)")
 ax.axis("off")
 
 def update(frame):
-    # 1フレームで複数ステップ進める（滑らかさ向上）
     for _ in range(3):
         step()
-    # 描画に少しガンマ補正をかけると見栄え良くなる
     display = np.sqrt(np.clip(dens, 0, None))
     img.set_data(display)
     return [img]

@@ -1,10 +1,10 @@
+# Linear Regression
 import torch
 import torch.nn as nn
 import torch.optim as optim
 import matplotlib.pyplot as plt
 
 
-# Linear Regression
 x = torch.linspace(0, 10, 100).unsqueeze(1)
 y = 3 * x + 2 +  torch.randn_like(x) * 2.0
 

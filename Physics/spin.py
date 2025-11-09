@@ -1,9 +1,9 @@
-# spin model (2D Ising model)
+# Spin model (2D Ising model)
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
 
-# === パラメータ ===
+# === Pareamters ===
 N = 50
 J = 1.0
 T_start = 4.0
@@ -14,7 +14,7 @@ steps_per_temp = N * N // 2
 np.random.seed(0)
 spins = np.random.choice([-1, 1], size=(N, N))
 
-# --- エネルギー関数 ---
+# --- Energy ---
 def total_energy():
     E = 0
     for i in range(N):
@@ -22,15 +22,15 @@ def total_energy():
             S = spins[i, j]
             nb = spins[(i+1)%N, j] + spins[i, (j+1)%N]
             E += -J * S * nb
-    return E / (N*N)  # サイトあたりの平均エネルギーに正規化
+    return E / (N*N)
 
-# --- ΔE計算 ---
+# --- ΔE ---
 def delta_energy(i, j):
     s = spins[i, j]
     nb = spins[(i+1)%N, j] + spins[(i-1)%N, j] + spins[i, (j+1)%N] + spins[i, (j-1)%N]
     return 2 * J * s * nb
 
-# --- メトロポリス更新 ---
+# --- Metropolis method ---
 def metropolis_step(T):
     for _ in range(steps_per_temp):
         i, j = np.random.randint(0, N, size=2)
@@ -38,7 +38,7 @@ def metropolis_step(T):
         if dE <= 0 or np.random.rand() < np.exp(-dE / T):
             spins[i, j] *= -1
 
-# === 描画設定 ===
+# === Animation ===
 fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(10, 4))
 im = ax1.imshow(spins, cmap='coolwarm', vmin=-1, vmax=1)
 ax1.axis("off")

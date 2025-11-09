@@ -1,4 +1,4 @@
-# Gradient Descent
+# Basic Gradient Descent
 # Determine parameters to fit the data with a function
 import numpy as np
 import torch

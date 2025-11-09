@@ -1,3 +1,4 @@
+# 2D classificaition
 import numpy as np
 import torch
 import torch.nn as nn
@@ -5,9 +6,7 @@ import torch.optim as optim
 import matplotlib.pyplot as plt
 
 
-# 2D classificaition
 N = 200
-
 # random data
 x = 4 * (torch.rand(N, 2) - 0.5)  # shape [N,2]
 r = torch.sqrt(x[:,0]**2 + x[:,1]**2)

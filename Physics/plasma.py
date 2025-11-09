@@ -1,43 +1,43 @@
-# plasma
+# Plasma particles
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
 
 # -------------------------
-# シミュレーションパラメータ
+# parameters
 # -------------------------
-N = 20                # 粒子数
-dt = 0.05             # タイムステップ
-steps = 500           # 総ステップ数
-k = 1.0               # クーロン定数（簡易単位）
-Bz = 1.0              # 外部磁場の強さ（z方向のみ）
+N = 20                
+dt = 0.05            
+steps = 500           
+k = 1.0              
+Bz = 1.0              
 
-# 粒子の状態: 位置、速度、質量、電荷
-pos = np.random.rand(N, 2) * 10 - 5   # [-5,5]の範囲
+pos = np.random.rand(N, 2) * 10 - 5
 vel = np.random.randn(N, 2) * 0.1
 mass = np.ones(N)
-charge = np.random.choice([-1, 1], N)  # ±電荷
+charge = np.random.choice([-1, 1], N)
 
 # -------------------------
-# 力計算関数
+# Forces
 # -------------------------
 def compute_forces(pos, vel):
     forces = np.zeros_like(pos)
     for i in range(N):
         for j in range(i+1, N):
-            # 2粒子間のベクトル
+
             r = pos[j] - pos[i]
-            dist = np.linalg.norm(r) + 1e-2  # 0割防止
+            dist = np.linalg.norm(r) + 1e-2
             # Coulomb force
             f = k * charge[i] * charge[j] * r / dist**3
             forces[i] += f
             forces[j] -= f
-        # 磁場によるローレンツ力（v x B）
+            
+        # Lorentz force
         forces[i] += charge[i] * np.array([-vel[i,1]*Bz, vel[i,0]*Bz])
     return forces
 
 # -------------------------
-# アニメーションセットアップ
+# Animation
 # -------------------------
 fig, ax = plt.subplots()
 scat = ax.scatter(pos[:,0], pos[:,1], c=charge, cmap='bwr', s=100)

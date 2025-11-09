@@ -3,6 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib import animation
 
+
 # Parameters
 N = 10  # number of boids
 width, height = 10.0, 10.0  # world size

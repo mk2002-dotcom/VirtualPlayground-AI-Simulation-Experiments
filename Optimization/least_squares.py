@@ -1,4 +1,4 @@
-# least squares method
+# Least squares method
 import numpy as np
 import matplotlib.pyplot as plt
 

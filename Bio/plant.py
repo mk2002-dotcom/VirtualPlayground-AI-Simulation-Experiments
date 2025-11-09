@@ -5,7 +5,7 @@ from matplotlib.collections import LineCollection
 import numpy as np
 import random
 
-# --- L-systemルール ---
+# --- L-system rule ---
 rules = {"X":[("F[+X][-X]FX",1.0)], "F":[("FF",1.0)]}
 
 def apply_rules(axiom, rules, max_iter):
@@ -33,8 +33,8 @@ def render_segments(axiom, angle=25, base_length=10, shrink=0.8):
             ny = y + np.sin(heading)*length
             segments.append(((x,y),(nx,ny)))
             widths.append(width)
-            # ランダムに枝上に葉を追加
-            if random.random()<0.3:  # 葉が付く確率
+            
+            if random.random()<0.3:
                 fx = x + random.uniform(0,1)*length
                 fy = y + random.uniform(0,1)*length
                 leaf_size = 5*(shrink**depth)*(0.7+0.6*random.random())
@@ -45,12 +45,12 @@ def render_segments(axiom, angle=25, base_length=10, shrink=0.8):
         elif cmd=="[":
             stack.append((x,y,heading))
         elif cmd=="]":
-            leaves.append((x,y,5*(shrink**depth))) # 枝末端にも葉
+            leaves.append((x,y,5*(shrink**depth)))
             x, y, heading = stack.pop()
 
     return np.array(segments), widths, leaves
 
-# ---------- パラメータ ----------
+# ---------- parameters ----------
 axiom = "X"
 max_iter = 6
 angle = 25
@@ -68,7 +68,7 @@ for exp in expansions:
     widths_per_iter.append(widths)
     leaves_per_iter.append(leaves)
 
-# --- 描画 ---
+# --- animation ---
 fig, ax = plt.subplots(figsize=(6,8))
 ax.set_aspect("equal")
 ax.axis("off")
@@ -80,7 +80,6 @@ ax.add_collection(lc)
 leaf_scat = ax.scatter([], [], color="green")
 
 def update(frame):
-    # 枝累積描画
     segs_list = [segments_per_iter[i] for i in range(frame+1) if len(segments_per_iter[i])>0]
     widths_list = [widths_per_iter[i] for i in range(frame+1) if len(widths_per_iter[i])>0]
     if segs_list:
@@ -89,7 +88,6 @@ def update(frame):
     else:
         lc.set_segments(np.empty((0,2,2)))
 
-    # 葉累積描画
     all_leaves = [leaf for i in range(frame+1) for leaf in leaves_per_iter[i]]
     if all_leaves:
         lx, ly, sizes = zip(*all_leaves)

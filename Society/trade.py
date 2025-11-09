@@ -1,4 +1,4 @@
-# trade
+# Trade
 import random
 import numpy as np
 import matplotlib.pyplot as plt
@@ -19,7 +19,7 @@ class World:
 		self.agents = [Agent(init_money) for _ in range(N_agent)]
 
 	def step(self):
-		# ランダムにペアを選んでトレード
+		# random trade
 		for i in range(len(self.agents)):	
 			for j in range(i + 1, len(self.agents)):
 				a = self.agents[i]

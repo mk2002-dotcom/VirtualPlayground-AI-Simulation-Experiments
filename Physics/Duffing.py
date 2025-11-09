@@ -4,26 +4,26 @@ import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
 
 # -----------------------
-# Duffing振動子のパラメータ
+# Duffing parameters
 # -----------------------
-delta = 0.2       # 減衰
-alpha = -1.0      # 線形バネ
-beta = 2.0        # 非線形バネ
-gamma = 0.3       # 外力振幅
-omega = 1.2       # 外力周波数
+delta = 0.2      
+alpha = -1.0      # linear
+beta = 2.0        # non linear
+gamma = 0.3       
+omega = 1.2       
 
 dt = 0.1
 steps = 4000
 
 # -----------------------
-# 初期条件
+# Initial state
 # -----------------------
 x = 0.5
 v = 0.0
 x_list = []
 
 # -----------------------
-# 時間発展（オイラー法）
+# Euler method
 # -----------------------
 for i in range(steps):
     t = i * dt
@@ -35,12 +35,12 @@ for i in range(steps):
 t_list = np.arange(0, steps*dt, dt)
 
 # -----------------------
-# アニメーション設定
+# Animation
 # -----------------------
 fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 6))
 plt.tight_layout()
 
-# --- 左：振動子アニメーション ---
+# --- Left ---
 ax1.set_xlim(-2, 2)
 ax1.set_ylim(-0.5, 0.5)
 ax1.set_aspect('equal')
@@ -49,7 +49,7 @@ ax1.axis('off')
 (line,) = ax1.plot([], [], lw=2, color='gray')
 (ball,) = ax1.plot([], [], 'o', markersize=20, color='red')
 
-# --- 右：x(t) グラフ ---
+# --- Right ---
 ax2.set_xlim(0, t_list[-1])
 ax2.set_ylim(min(x_list) - 0.5, max(x_list) + 0.5)
 ax2.set_xlabel("Time")
@@ -60,7 +60,6 @@ ax2.set_title("Duffing Oscillator: Position over Time")
 def update(frame):
     pos = x_list[frame]
     ball.set_data([pos], [0])
-    # 時間グラフ更新
     time_line.set_data(t_list[:frame], x_list[:frame])
     return line, ball, time_line
 

@@ -1,4 +1,4 @@
-# compression with neural network
+# Image compression with neural network
 import torch
 import matplotlib.pyplot as plt
 from PIL import Image
